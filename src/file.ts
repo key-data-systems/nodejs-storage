@@ -1167,8 +1167,7 @@ class File extends ServiceObject {
 
               return;
             }
-
-            const headers = rawResponseStream.toJSON().headers;
+            const headers = rawResponseStream.headers;
             const isCompressed = headers['content-encoding'] === 'gzip';
             const shouldRunValidation = !rangeRequest && (crc32c || md5);
             const throughStreams: Writable[] = [];
@@ -1185,10 +1184,10 @@ class File extends ServiceObject {
             if (throughStreams.length === 1) {
               rawResponseStream =
                   // tslint:disable-next-line:no-any
-                  (rawResponseStream.pipe(throughStreams[0]) as any);
+                  ((rawResponseStream.body as Readable).pipe(throughStreams[0]) as any);
             } else if (throughStreams.length > 1) {
               rawResponseStream =
-                  rawResponseStream.pipe(pumpify.obj(throughStreams));
+                  (rawResponseStream.body as Readable).pipe(pumpify.obj(throughStreams));
             }
 
             rawResponseStream.on('end', onComplete).pipe(throughStream, {

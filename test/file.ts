@@ -714,10 +714,9 @@ describe('File', () => {
           (err: Error, res: {}, body: {}, callback: Function) => {
             const rawResponseStream = through();
             Object.assign(rawResponseStream, {
-              toJSON() {
-                return {headers: {}};
-              },
+                headers: {}
             });
+
             callback(null, null, rawResponseStream);
             setImmediate(() => {
               rawResponseStream.end();
@@ -937,13 +936,9 @@ describe('File', () => {
             (err: Error, res: {}, body: {}, callback: Function) => {
               const rawResponseStream = through();
               Object.assign(rawResponseStream, {
-                toJSON() {
-                  return {
-                    headers: {
-                      'content-encoding': 'gzip',
-                    },
-                  };
-                },
+                headers: {
+                  'content-encoding': 'gzip',
+                }
               });
               callback(null, null, rawResponseStream);
               setImmediate(() => {
